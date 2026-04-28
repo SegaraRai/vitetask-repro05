@@ -16,21 +16,17 @@ jobs:
           - ubuntu-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v6
+      - uses: voidzero-dev/setup-vp@v1
         with:
-          version: 10.33.2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
+          node-version: "24"
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - run: vp install
       - name: Uncached package shim prints version
         shell: pwsh
         run: |
-          $vp = if ($IsWindows) { ".\node_modules\.bin\vp.CMD" } else { "./node_modules/.bin/vp" }
-          & $vp cache clean
-          $output = & $vp run shim:uncached 2>&1 | Out-String
+          vp cache clean
+          $output = vp run shim:uncached 2>&1 | Out-String
           Write-Output $output
           if (-not $output.Contains("6.0.0")) {
             throw "uncached package shim did not print 6.0.0"
@@ -38,9 +34,8 @@ jobs:
       - name: Cached direct Node CLI prints version
         shell: pwsh
         run: |
-          $vp = if ($IsWindows) { ".\node_modules\.bin\vp.CMD" } else { "./node_modules/.bin/vp" }
-          & $vp cache clean
-          $output = & $vp run node:cached 2>&1 | Out-String
+          vp cache clean
+          $output = vp run node:cached 2>&1 | Out-String
           Write-Output $output
           if (-not $output.Contains("6.0.0")) {
             throw "cached direct Node CLI did not print 6.0.0"
@@ -48,9 +43,8 @@ jobs:
       - name: Cached package shim prints version
         shell: pwsh
         run: |
-          $vp = if ($IsWindows) { ".\node_modules\.bin\vp.CMD" } else { "./node_modules/.bin/vp" }
-          & $vp cache clean
-          $output = & $vp run shim:cached 2>&1 | Out-String
+          vp cache clean
+          $output = vp run shim:cached 2>&1 | Out-String
           Write-Output $output
           if (-not $output.Contains("6.0.0")) {
             throw "cached package shim did not print 6.0.0"
