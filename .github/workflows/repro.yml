@@ -25,4 +25,30 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm check
+      - name: Uncached package shim prints version
+        shell: pwsh
+        run: |
+          vp cache clean
+          $output = vp run shim:uncached 2>&1 | Out-String
+          Write-Output $output
+          if (-not $output.Contains("6.0.0")) {
+            throw "uncached package shim did not print 6.0.0"
+          }
+      - name: Cached direct Node CLI prints version
+        shell: pwsh
+        run: |
+          vp cache clean
+          $output = vp run node:cached 2>&1 | Out-String
+          Write-Output $output
+          if (-not $output.Contains("6.0.0")) {
+            throw "cached direct Node CLI did not print 6.0.0"
+          }
+      - name: Cached package shim prints version
+        shell: pwsh
+        run: |
+          vp cache clean
+          $output = vp run shim:cached 2>&1 | Out-String
+          Write-Output $output
+          if (-not $output.Contains("6.0.0")) {
+            throw "cached package shim did not print 6.0.0"
+          }
