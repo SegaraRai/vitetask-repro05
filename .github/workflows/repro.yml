@@ -20,7 +20,7 @@ jobs:
       - uses: voidzero-dev/setup-vp@v1
         with:
           node-version: "24"
-          cache: pnpm
+          cache: true
       - run: vp install
       - name: Uncached package shim prints version
         shell: pwsh
