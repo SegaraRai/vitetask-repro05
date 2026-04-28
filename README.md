@@ -23,18 +23,20 @@ Node CLI path is included as a control and should print the version.
 ```powershell
 pnpm install
 
-vp cache clean
-$output = vp run shim:uncached 2>&1 | Out-String
+$vp = if ($IsWindows) { ".\node_modules\.bin\vp.CMD" } else { "./node_modules/.bin/vp" }
+
+& $vp cache clean
+$output = & $vp run shim:uncached 2>&1 | Out-String
 Write-Output $output
 if (-not $output.Contains("6.0.0")) { throw "uncached package shim failed" }
 
-vp cache clean
-$output = vp run node:cached 2>&1 | Out-String
+& $vp cache clean
+$output = & $vp run node:cached 2>&1 | Out-String
 Write-Output $output
 if (-not $output.Contains("6.0.0")) { throw "cached direct Node CLI failed" }
 
-vp cache clean
-$output = vp run shim:cached 2>&1 | Out-String
+& $vp cache clean
+$output = & $vp run shim:cached 2>&1 | Out-String
 Write-Output $output
 if (-not $output.Contains("6.0.0")) { throw "cached package shim failed" }
 ```
