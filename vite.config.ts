@@ -4,15 +4,15 @@ export default defineConfig({
   run: {
     tasks: {
       "shim:cached": {
-        command: "lingui --version",
+        command: "marker-cli shim-cached",
         cache: true,
       },
       "node:cached": {
-        command: "node ./node_modules/@lingui/cli/dist/lingui.js --version",
+        command: "node ./packages/marker-cli/bin/marker-cli.mjs node-cached",
         cache: true,
       },
       "shim:uncached": {
-        command: "lingui --version",
+        command: "marker-cli shim-uncached",
         cache: false,
       },
     },

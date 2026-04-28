@@ -6,7 +6,7 @@
     "check": "node ./scripts/check.mjs"
   },
   "devDependencies": {
-    "@lingui/cli": "6.0.0",
+    "marker-cli": "file:./packages/marker-cli",
     "vite": "npm:@voidzero-dev/vite-plus-core@0.1.19",
     "vite-plus": "0.1.19"
   },

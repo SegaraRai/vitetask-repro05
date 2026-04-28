@@ -1,7 +1,11 @@
 import { spawnSync } from "node:child_process";
 import process from "node:process";
 
-const EXPECTED_VERSION = "6.0.0";
+const CASES = [
+  ["shim:uncached", "shim-uncached"],
+  ["node:cached", "node-cached"],
+  ["shim:cached", "shim-cached"],
+];
 
 function run(args) {
   const result = spawnSync("vp", args, {
@@ -20,23 +24,15 @@ function run(args) {
   return output;
 }
 
-function assertIncludes(output, expected, label) {
+function assertIncludes(output, label) {
+  const expected = `MARKER_STDOUT:${label}`;
   if (!output.includes(expected)) {
-    throw new Error(`${label} did not include ${JSON.stringify(expected)}`);
+    throw new Error(`task output did not include ${JSON.stringify(expected)}`);
   }
 }
 
-run(["cache", "clean"]);
-
-const uncachedShim = run(["run", "shim:uncached"]);
-assertIncludes(uncachedShim, EXPECTED_VERSION, "uncached package shim");
-
-run(["cache", "clean"]);
-
-const cachedNode = run(["run", "node:cached"]);
-assertIncludes(cachedNode, EXPECTED_VERSION, "cached direct node CLI");
-
-run(["cache", "clean"]);
-
-const cachedShim = run(["run", "shim:cached"]);
-assertIncludes(cachedShim, EXPECTED_VERSION, "cached package shim");
+for (const [task, label] of CASES) {
+  run(["cache", "clean"]);
+  const output = run(["run", task]);
+  assertIncludes(output, label);
+}

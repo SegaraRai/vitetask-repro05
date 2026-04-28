@@ -22,30 +22,48 @@ jobs:
           node-version: "24"
           cache: true
       - run: vp install
-      - name: Uncached package shim prints version
+      - name: Reset for uncached package shim
         shell: pwsh
         run: |
+          Remove-Item .markers -Recurse -Force -ErrorAction SilentlyContinue
           vp cache clean
-          $output = vp run shim:uncached 2>&1 | Out-String
-          Write-Output $output
-          if (-not $output.Contains("6.0.0")) {
-            throw "uncached package shim did not print 6.0.0"
+      - name: Run uncached package shim
+        run: vp run shim:uncached
+      - name: Diagnose uncached package shim
+        shell: pwsh
+        run: |
+          if (Test-Path .markers/shim-uncached.json) {
+            Get-Content .markers/shim-uncached.json
+          } else {
+            throw "marker-cli did not create .markers/shim-uncached.json"
           }
-      - name: Cached direct Node CLI prints version
+      - name: Reset for cached direct Node CLI
         shell: pwsh
         run: |
+          Remove-Item .markers -Recurse -Force -ErrorAction SilentlyContinue
           vp cache clean
-          $output = vp run node:cached 2>&1 | Out-String
-          Write-Output $output
-          if (-not $output.Contains("6.0.0")) {
-            throw "cached direct Node CLI did not print 6.0.0"
+      - name: Run cached direct Node CLI
+        run: vp run node:cached
+      - name: Diagnose cached direct Node CLI
+        shell: pwsh
+        run: |
+          if (Test-Path .markers/node-cached.json) {
+            Get-Content .markers/node-cached.json
+          } else {
+            throw "marker-cli did not create .markers/node-cached.json"
           }
-      - name: Cached package shim prints version
+      - name: Reset for cached package shim
         shell: pwsh
         run: |
+          Remove-Item .markers -Recurse -Force -ErrorAction SilentlyContinue
           vp cache clean
-          $output = vp run shim:cached 2>&1 | Out-String
-          Write-Output $output
-          if (-not $output.Contains("6.0.0")) {
-            throw "cached package shim did not print 6.0.0"
+      - name: Run cached package shim
+        run: vp run shim:cached
+      - name: Diagnose cached package shim
+        shell: pwsh
+        run: |
+          if (Test-Path .markers/shim-cached.json) {
+            Get-Content .markers/shim-cached.json
+          } else {
+            throw "marker-cli did not create .markers/shim-cached.json"
           }
