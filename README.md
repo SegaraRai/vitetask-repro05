@@ -20,9 +20,25 @@ Node CLI path is included as a control and should print the version.
 
 ## Manual Steps
 
-```sh
+```powershell
 pnpm install
-pnpm check
+
+vp cache clean
+$output = vp run shim:uncached 2>&1 | Out-String
+Write-Output $output
+if (-not $output.Contains("6.0.0")) { throw "uncached package shim failed" }
+
+vp cache clean
+$output = vp run node:cached 2>&1 | Out-String
+Write-Output $output
+if (-not $output.Contains("6.0.0")) { throw "cached direct Node CLI failed" }
+
+vp cache clean
+$output = vp run shim:cached 2>&1 | Out-String
+Write-Output $output
+if (-not $output.Contains("6.0.0")) { throw "cached package shim failed" }
 ```
 
-The GitHub Actions workflow runs the same check on Linux and Windows.
+The GitHub Actions workflow runs these steps directly on Linux and Windows.
+`pnpm check` is kept as a convenience wrapper for local use, but CI does not
+use it.
