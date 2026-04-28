@@ -1,0 +1,14 @@
+{
+  "name": "vitetask-repro05",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node ./scripts/check.mjs"
+  },
+  "devDependencies": {
+    "@lingui/cli": "6.0.0",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.1.19",
+    "vite-plus": "0.1.19"
+  },
+  "packageManager": "pnpm@10.33.2"
+}
