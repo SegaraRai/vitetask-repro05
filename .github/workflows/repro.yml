@@ -52,6 +52,21 @@ jobs:
           } else {
             throw "marker-cli did not create .markers/node-cached.json"
           }
+      - name: Reset for cached package shim with PATHEXT passthrough
+        shell: pwsh
+        run: |
+          Remove-Item .markers -Recurse -Force -ErrorAction SilentlyContinue
+          vp cache clean
+      - name: Run cached package shim with PATHEXT passthrough
+        run: vp run shim:cached-pathext
+      - name: Diagnose cached package shim with PATHEXT passthrough
+        shell: pwsh
+        run: |
+          if (Test-Path .markers/shim-cached-pathext.json) {
+            Get-Content .markers/shim-cached-pathext.json
+          } else {
+            throw "marker-cli did not create .markers/shim-cached-pathext.json"
+          }
       - name: Reset for cached package shim
         shell: pwsh
         run: |

@@ -4,6 +4,7 @@ import process from "node:process";
 const CASES = [
   ["shim:uncached", "shim-uncached"],
   ["node:cached", "node-cached"],
+  ["shim:cached-pathext", "shim-cached-pathext"],
   ["shim:cached", "shim-cached"],
 ];
 
